@@ -120,7 +120,7 @@ export class TrivyKubeBenchProvider implements SecurityProvider {
 
   async ensureToolInstalled(): Promise<void> {
     const dataDir =
-      this.host?.getDataDir?.() ?? path.join(process.env.HOME ?? ".", ".boff/vibecontrols");
+      this.host?.getDataDir?.() ?? path.join(os.homedir(), ".boff/vibecontrols");
 
     // 1. Trivy — sha256-pinned binary via the shared installer.
     this.trivyPath = await resolveToolPath(
@@ -457,7 +457,7 @@ export class TrivyKubeBenchProvider implements SecurityProvider {
 function resolveKubeconfigPath(override?: string): string | null {
   if (override) return override;
   if (process.env.KUBECONFIG) return process.env.KUBECONFIG;
-  const home = process.env.HOME ?? os.homedir();
+  const home = os.homedir();
   return home ? path.join(home, ".kube", "config") : null;
 }
 
