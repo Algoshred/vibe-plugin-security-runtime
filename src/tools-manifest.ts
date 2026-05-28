@@ -6,14 +6,16 @@
  * no checksums.txt). Repinned 2026-05-28 to v0.70.0 which ships full
  * binary releases for all 4 supported host platforms.
  *
- * kube-bench is invoked from a known image at runtime (via `kubectl run`)
- * rather than as a host binary — we still pin the expected version in
- * `KUBE_BENCH_VERSION` so audit logs carry a stable identifier.
+ * kube-bench is invoked as a one-shot Docker container against the
+ * configured kubeconfig (image `aquasec/kube-bench:latest`). The
+ * `KUBE_BENCH_VERSION` constant carries a stable identifier for audit
+ * logs — bumping it is purely cosmetic since the image tag floats.
  */
 import type { ToolManifest } from "@vibecontrols/vibe-plugin-security/tool-installer";
 
 export const TRIVY_VERSION = "0.70.0";
 export const KUBE_BENCH_VERSION = "0.7.4";
+export const KUBE_BENCH_IMAGE = "aquasec/kube-bench:latest";
 
 export const TOOLS_MANIFEST: ToolManifest = {
   trivy: {

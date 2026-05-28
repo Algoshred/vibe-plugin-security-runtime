@@ -16,7 +16,7 @@ import type {
 import { TrivyKubeBenchProvider } from "./provider.js";
 
 const PLUGIN_NAME = "security-runtime";
-const PLUGIN_VERSION = "2026.528.4";
+const PLUGIN_VERSION = "2026.528.6";
 
 export const createPlugin: VibePluginFactory = (_ctx: ProfileContext): VibePlugin => {
   const provider = new TrivyKubeBenchProvider();
@@ -40,7 +40,7 @@ export const createPlugin: VibePluginFactory = (_ctx: ProfileContext): VibePlugi
     name: PLUGIN_NAME,
     version: PLUGIN_VERSION,
     description:
-      "Continuous Trivy rescan + kube-bench checks for the runtime.continuous lifecycle stage. Wave 2 scaffold.",
+      "Continuous Trivy image rescan + kube-bench CIS check for the runtime.continuous lifecycle stage. Trivy auto-installs via sha256-pinned binary; kube-bench runs as a Docker container against the configured kubeconfig.",
     tags: ["backend", "provider", "integration"],
     capabilities: {
       storage: "rw",
