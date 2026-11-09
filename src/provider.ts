@@ -119,10 +119,13 @@ export class TrivyKubeBenchProvider implements SecurityProvider {
   }
 
   async ensureToolInstalled(): Promise<void> {
-    const dataDir =
-      this.host?.getDataDir?.() ?? path.join(os.homedir(), ".boff/vibecontrols");
+    const dataDir = this.host?.getDataDir?.() ?? path.join(os.homedir(), ".boff/vibecontrols");
 
     // 1. Trivy — sha256-pinned binary via the shared installer.
+    const trivyManifest = TOOLS_MANIFEST.trivy;
+    if (!trivyManifest) {
+      throw new Error("runtime-provider: trivy entry missing from TOOLS_MANIFEST");
+    }
     this.trivyPath = await resolveToolPath(
       {
         dataDir,
@@ -133,7 +136,7 @@ export class TrivyKubeBenchProvider implements SecurityProvider {
         },
       },
       "trivy",
-      TOOLS_MANIFEST.trivy,
+      trivyManifest,
     );
 
     // 2. kube-bench — Docker-based one-shot. Pre-warm the image if Docker is
@@ -185,8 +188,7 @@ export class TrivyKubeBenchProvider implements SecurityProvider {
     } else {
       const severityFilter = cfg.trivySeverityFilter ?? "HIGH,CRITICAL";
       const total = imageRefs.length;
-      for (let i = 0; i < total; i++) {
-        const imageRef = imageRefs[i];
+      for (const [i, imageRef] of imageRefs.entries()) {
         const pct = 10 + Math.floor(((i + 1) / total) * 55);
         input.onProgress?.({ pct, message: `Trivy: scanning ${imageRef}` });
         const slug = slugify(imageRef);
